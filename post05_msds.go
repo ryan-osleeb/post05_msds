@@ -59,7 +59,7 @@ func exists(CID string) string {
 	}
 	defer db.Close()
 
-	statement := fmt.Sprintf(`SELECT "CID" FROM "MSDS" where CID = '%s'`, CID)
+	statement := fmt.Sprintf(`SELECT "CID" FROM "msds" where CID = '%s'`, CID)
 	rows, err := db.Query(statement)
 
 	for rows.Next() {
@@ -94,7 +94,7 @@ func AddUser(d MSDSCourse) string {
 		return ""
 	}
 
-	insertStatement := `INSERT INTO "MSDS" ("CID", "CNAME", "CPREREQ") VALUES ($1, $2, $3)`
+	insertStatement := `INSERT INTO "msds" ("CID", "CNAME", "CPREREQ") VALUES ($1, $2, $3)`
 	_, err = db.Exec(insertStatement, d.CID, d.CNAME, d.CPREREQ)
 	if err != nil {
 	    fmt.Println("db.Exec()", err)
@@ -113,7 +113,7 @@ func DeleteUser(CID string) error {
 	defer db.Close()
 
 	// Does the ID exist?
-	statement := fmt.Sprintf(`SELECT "CID" FROM "MSDS" where CID = %s`, CID)
+	statement := fmt.Sprintf(`SELECT "CID" FROM "msds" where CID = %s`, CID)
 	rows, err := db.Query(statement)
 
 	var cid string
@@ -130,7 +130,7 @@ func DeleteUser(CID string) error {
 	}
 
 	// Delete from MSDS
-	deleteStatement := `delete from "MSDS" where CID=$1`
+	deleteStatement := `delete from "msds" where CID=$1`
 	_, err = db.Exec(deleteStatement, cid)
 	if err != nil {
 		return err
@@ -148,7 +148,7 @@ func ListUsers() ([]MSDSCourse, error) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query(`SELECT "CID","CNAME","CPREREQ" FROM "MSDS"`)
+	rows, err := db.Query(`SELECT "CID","CNAME","CPREREQ" FROM "msds"`)
 	if err != nil {
 		return Data, err
 	}
@@ -181,7 +181,7 @@ func UpdateUser(d MSDSCourse) error {
 		return errors.New("Course does not exist")
 	}
 	d.CID = CID
-	updateStatement := `update "MSDS" set "CID"=$1, "CNAME"=$2, "CPREREQ"=$3 where "CID"=$1`
+	updateStatement := `update "msds" set "CID"=$1, "CNAME"=$2, "CPREREQ"=$3 where "CID"=$1`
 	_, err = db.Exec(updateStatement, d.CID, d.CNAME, d.CPREREQ)
 	if err != nil {
 		return err
