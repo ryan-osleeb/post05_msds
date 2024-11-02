@@ -101,19 +101,6 @@ func AddUser(d MSDSCourse) string {
 		return ""
 	}
 
-	CID = exists(d.CID)
-	if CID == "" {
-		return CID
-	}
-
-	insertStatement = `insert into "MSDS" ("CID", "CNAME", "CPREREQ")
-	values ($1, $2, $3)`
-	_, err = db.Exec(insertStatement, CID, d.CID, d.CNAME, d.CPREREQ)
-	if err != nil {
-		fmt.Println("db.Exec()", err)
-		return ""
-	}
-
 	return CID
 }
 
@@ -148,6 +135,8 @@ func DeleteUser(CID string) error {
 	if err != nil {
 		return err
 	}
+
+	return nil
 }
 
 // ListUsers lists all users in the database
