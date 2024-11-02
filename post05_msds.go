@@ -94,11 +94,11 @@ func AddUser(d MSDSCourse) string {
 		return ""
 	}
 
-	insertStatement := `insert into "MSDS" ("CID") values ($1)`
-	_, err = db.Exec(insertStatement, d.CID)
+	insertStatement := `INSERT INTO "MSDS" ("CID", "CNAME", "CPREREQ") VALUES ($1, $2, $3)`
+	_, err = db.Exec(insertStatement, d.CID, d.CNAME, d.CPREREQ)
 	if err != nil {
-		fmt.Println(err)
-		return ""
+	    fmt.Println("db.Exec()", err)
+	    return ""
 	}
 
 	return CID
