@@ -50,30 +50,35 @@ func openConnection() (*sql.DB, error) {
 // The function returns the User ID of the username
 // -1 if the user does not exist
 func exists(CID string) string {
-	CID = strings.ToLower(CID)
+    CID = strings.ToLower(CID)
 
-	db, err := openConnection()
-	if err != nil {
-		fmt.Println(err)
-		return ""
-	}
-	defer db.Close()
+    db, err := openConnection()
+    if err != nil {
+        fmt.Println("Database connection error:", err)
+        return ""
+    }
+    defer db.Close()
 
-	statement := fmt.Sprintf(`SELECT "CID" FROM "MSDS" where CID = '%s'`, CID)
-	rows, err := db.Query(statement)
+    statement := fmt.Sprintf(`SELECT "CID" FROM "msds" WHERE CID = '%s'`, CID)
+    rows, err := db.Query(statement)
+    if err != nil {
+        fmt.Println("Query error:", err)  // Added error handling here
+        return ""
+    }
+    defer rows.Close()
 
-	for rows.Next() {
-		var id string
-		err = rows.Scan(&id)
-		if err != nil {
-			fmt.Println("Scan", err)
-			return ""
-		}
-		CID = id
-	}
-	defer rows.Close()
-	return CID
+    for rows.Next() {
+        var id string
+        err = rows.Scan(&id)
+        if err != nil {
+            fmt.Println("Scan error:", err)
+            return ""
+        }
+        CID = id
+    }
+    return CID
 }
+
 
 // AddUser adds a new user to the database
 // Returns new User ID
